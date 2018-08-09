@@ -2,7 +2,7 @@
   "name": "branches",
   "version": "0.1.0",
   "description": "Graph-based navigation for branching user interfaces",
-  "main": "src/Graph.js",
+  "main": "src/Navigator.js",
   "scripts": {
     "test": "jest",
     "sample:react": "docker container run --rm -d --publish 80:3000 --mount type=bind,src=$PWD/samples/react,dst=/project/src --mount type=bind,src=$PWD/src,dst=/project/src/lib sansumbrella/sampler:react"

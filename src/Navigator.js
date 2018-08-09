@@ -2,15 +2,13 @@ import StackEntry from "./StackEntry";
 import Position from "./Position";
 import SpecialCaseNodes from "./SpecialCaseNodes";
 import get from "./get";
-import isEmpty from "./isEmpty";
 
 /**
- * A graph representation of a branching user flow, with convenience functions for
- * navigating the graph from one position to another.
+ * A set of functions for navigating a graph representation of a branching user flow.
  *
- * After construction, all operations are stateless and idempotent.
+ * The underlying graph remains unmodified.
  */
-export default class Graph {
+export default class Navigator {
   /**
    * @constructor
    *
@@ -140,8 +138,10 @@ export default class Graph {
         });
         return this._getCurrentOrNextValidPosition(state, this.createPosition(state, stack));
       }
+    }
 
-      // finished a loop collection, proceed to the parent node's next
+    // Continue after collections with the parent's next node
+    if (stack.length > 1) {
       return this.nextPosition(
         state,
         new Position({
@@ -200,10 +200,8 @@ export default class Graph {
       return this.nextPosition(state, graphPosition);
     }
 
-    const emptyCollections = graphPosition.stack
-      .map(entry => entry.collection)
-      .filter(c => c && isEmpty(c));
-    if (!isEmpty(emptyCollections)) {
+    const hasEmptyCollections = graphPosition.allNodes().some(node => !!get(node, [this.controlKey, "collectionPath"])) && graphPosition.allCollectionKeys().length === 0;
+    if (hasEmptyCollections) {
       // skip nodes that are looping over empty collections
       return this.nextPosition(state, graphPosition);
     }

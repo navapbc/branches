@@ -53,7 +53,7 @@ Unit tests can be run using yarn or npm:
 
 ## Using a graph in your own project
 
-To use a flow control graph in your own project, you will first need to import this library and then create a new instance of a Graph with your own data. We will talk about the `sections` and `sectionOrdering` passed to the Graph later; the other parameters are detailed in the [Graph source file](src/Graph.js).
+To use a flow control graph in your own project, you will first need to import this library and then create a new instance of a Navigator with your own graph data. We will talk about the `sections` and `sectionOrdering` passed to the Navigator later; the other parameters are detailed in the [Navigator source file](src/Navigator.js).
 
 ```
 import Graph from "./lib/branches/Graph";

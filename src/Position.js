@@ -17,8 +17,8 @@ import get from "./get";
 export default class Position {
   /**
    *
-   * @param {Graph} parent - the parent Graph structure in which this position lives
-   * @param {String} url - url identifying this graph position
+   * @param {Navigator} parent - the parent Navigator that generated this position
+   * @param {Array<StackEntry>} url - url identifying this graph position
    */
   constructor({ stack = [], parent }) {
     this.stack = stack;
@@ -47,15 +47,6 @@ export default class Position {
   }
 
   /**
-   * Returns the top-level user data stored in the graph.
-   */
-  activeData() {
-    if (!this.isEnd()) {
-      return get(this.parent.sections, this.stack.map(entry => entry.key).concat("_data"));
-    }
-  }
-
-  /**
    * Returns an array of all the nodes in this position's stack.
    * In the array, later entries are nodes nested within earlier entries.
    * Most complete picture of where we are.
@@ -78,6 +69,7 @@ export default class Position {
     }
     return keys;
   }
+
   activeCollectionKey() {
     const keys = this.allCollectionKeys();
     return keys[keys.length - 1];

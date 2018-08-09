@@ -1,4 +1,4 @@
-import Graph from "./Graph";
+import Graph from "./Navigator";
 import Position from "./Position";
 import StackEntry from "./StackEntry";
 

@@ -1,4 +1,4 @@
-import Graph from "./Graph";
+import Graph from "./Navigator";
 import Position from "./Position";
 import _StackEntry from "./StackEntry";
 import StackEntry from "./StackEntry";
@@ -111,7 +111,7 @@ const mockGraphData = {
           initialNode: "loopStart",
           collectionPath: "nestedIterables.object",
           collectionFilter: "notTwo",
-          next: "final"
+          next: "loopEmpty"
         },
         loopStart: {
           name: "loop a",
@@ -127,6 +127,30 @@ const mockGraphData = {
         },
         loopEnd: {
           name: "loop c"
+        }
+      },
+      loopEmpty: {
+        name: "looper - empty",
+        _control: {
+          initialNode: "emptyStart",
+          collectionPath: "nestedIterables.object",
+          collectionFilter: "notAnything",
+          next: "loopMissing",
+        },
+        emptyStart: {
+          name: "emptyStart",
+        }
+      },
+      loopMissing: {
+        name: "looper - missing",
+        name: "missing loop",
+        _control: {
+          initialNode: "missingStart",
+          collectionPath: "nestedIterables.nonexistant",
+          next: "final"
+        },
+        missingStart: {
+          name: "missingStart"
         }
       },
       final: {
@@ -148,10 +172,12 @@ mockFilters.alwaysTrue.mockReturnValue(true);
 mockFilters.alwaysFalse.mockReturnValue(false);
 
 const mockCollectionFilters = {
-  notTwo: jest.fn()
+  notTwo: jest.fn(),
+  notAnything: jest.fn()
 };
 
 mockCollectionFilters.notTwo.mockImplementation((data, entry) => entry !== 22 && entry !== "two");
+mockCollectionFilters.notAnything.mockReturnValue(false);
 
 const mockApplicationData = {
   nestedIterables: {
@@ -224,6 +250,20 @@ describe("Graph", () => {
         "1",
         "2"
       ]);
+    });
+
+    it("does not add empty collection key arrays for missing or empty collections", () => {
+      const emptyStack = [new StackEntry({ key: "collections" }), new StackEntry({ key: "loopEmpty" })];
+      const emptyStackWithCollections = graph._ensureCollections(mockApplicationData, emptyStack);
+      expect(emptyStackWithCollections[emptyStackWithCollections.length - 2]).toHaveProperty("collectionKeys", null);
+      expect(emptyStackWithCollections[emptyStackWithCollections.length - 2]).toHaveProperty("activeKey", null);
+      expect(emptyStackWithCollections).toEqual(emptyStack);
+
+      const missingStack = [new StackEntry({ key: "collections" }), new StackEntry({ key: "loopMissing" })];
+      const missingStackWithCollections = graph._ensureCollections(mockApplicationData, missingStack);
+      expect(missingStackWithCollections[missingStackWithCollections.length - 2]).toHaveProperty("collectionKeys", null);
+      expect(missingStackWithCollections[missingStackWithCollections.length - 2]).toHaveProperty("activeKey", null);
+      expect(missingStackWithCollections).toEqual(missingStack);
     });
   });
 
@@ -330,7 +370,7 @@ describe("Graph", () => {
     });
   });
 
-  describe("nextValidPosition", () => {
+  describe("nextPosition", () => {
     it("skips over nodes that have failing conditions (in their _control.condition)", () => {
       const start = graph.createPositionFromURL(
         mockApplicationData,
@@ -348,7 +388,14 @@ describe("Graph", () => {
       expect(graph.nextPosition(mockApplicationData, start).isEnd()).toBe(true);
     });
 
-    it("skips looping nodes that have a missing or empty collection", () => {});
+    it("skips looping nodes that have a missing or empty collection", () => {
+      const missing = graph.createPositionFromURL(mockApplicationData, "collections/loopMissing");
+      expect(missing.activeNode().name).toBe("missingStart");
+      expect(graph.nextPosition(mockApplicationData, missing).activeNode().name).toBe("fin");
+
+      const empty = graph.createPositionFromURL(mockApplicationData, "collections/loopEmpty");
+      expect(graph.nextPosition(mockApplicationData, empty).activeNode().name).toBe("fin");
+    });
   });
 
   describe("visitSequence", () => {
