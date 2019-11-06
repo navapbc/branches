@@ -1,5 +1,5 @@
 import GraphAnalyzer from "./GraphAnalyzer";
-import graph from "../samples/react/graph";
+import graph from "../example/src/graph";
 
 /**
  * @file

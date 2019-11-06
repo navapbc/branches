@@ -4,21 +4,19 @@
   "description": "Graph-based navigation for branching user interfaces",
   "main": "src/Navigator.js",
   "scripts": {
-    "test": "jest",
-    "sample:react": "docker container run --rm -d --publish 80:3000 --mount type=bind,src=$PWD/samples/react,dst=/project/src --mount type=bind,src=$PWD/src,dst=/project/src/lib sansumbrella/sampler:react"
+    "test": "jest"
   },
   "jest": {
     "testEnvironment": "node"
   },
-  "repository": "git@bitbucket.org:sansumbrella/branches.git",
+  "repository": "git@bitbucket.org:navahq/branches.git",
   "author": "David Wicks",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-jest": "^23.4.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "jest": "23.4.1",
-    "regenerator-runtime": "^0.12.0"
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0"
   }
 }

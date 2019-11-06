@@ -3,9 +3,7 @@
 
 
 - [Branches](#branches)
-  - [Samples](#samples)
-    - [Install Docker](#install-docker)
-    - [Run the sample](#run-the-sample)
+  - [Sample app](#sample-app)
   - [Tests](#tests)
   - [Using a graph in your own project](#using-a-graph-in-your-own-project)
     - [What the graph does](#what-the-graph-does)
@@ -28,28 +26,34 @@
 
 A graph structure with navigation and analysis functions to aid in building branching user interfaces.
 
-## Samples
+## Example app
 
-### Install Docker
+An example application is located in [`example/`](example/).
 
-If you don't have Docker installed on your system, you will want to have it. The sample runs inside a container that helps us keep this repository's size down and limit the library dependencies. You can download the [docker community edition](https://www.docker.com/community-edition) for free.
+**Run the example app:**
 
-### Run the sample
+1. Clone this repo
+1. Navigate to the [`example`](example) directory in your terminal
+1. Install the example app's dependencies:
+  ```sh
+  npm install
+  ```
+1. Run the app
+  ```sh
+  npm start
+  ```
 
-The sample can be run using either yarn or npm at the root level of this repository:  
-`yarn run sample:react`
+Once the `start` command is ran, a development server will start and should automatically navigate to [localhost:3000](http://localhost:3000/) in your browser.
 
-Once that command starts the sample server (it will return you to your console), navigate to [localhost](http://localhost/) in your browser to interact with the running sample.
-
-Behind the scenes, we use Docker to run a server process with create-react-app pointing at the samples directory. You can edit the files in that directory—including [graph.json](samples/react/graph.json)—and see live updates in your browser. It may take a few minutes to download all the files the first time you run the sample, but thereafter it will be fast.
+You can edit the files in the `example` directory—including [graph.json](example/react/graph.json)—and see live updates in your browser.
 
 ## Tests
 
-Before you run the tests for the first time, you need to install the project's development dependencies. This adds the test framework and libraries that let it parse the latest javascript syntax. You can add them using yarn or npm at the root level of this repository:  
-`yarn install`
+Before you run the tests for the first time, you need to install the project's development dependencies. This adds the test framework and libraries that let it parse the latest javascript syntax. You can add them using npm at the root level of this repository:
+`npm install`
 
-Unit tests can be run using yarn or npm:  
-`yarn test`
+Unit tests can be run using npm:
+`npm test`
 
 ## Using a graph in your own project
 
@@ -202,5 +206,5 @@ Any collection that has zero entries will be skipped, and progress will continue
 
 ## What next
 
-- Try changing parameters within the sample graph.
+- Try changing parameters within the example graph.
 - Look at the Graph.test.js mock data structure for reference controls
