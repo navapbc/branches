@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 
-class App extends Component {
+class Page extends Component {
   render() {
     const { position, next, reset } = this.props;
     if (position.isEnd()) {
@@ -20,4 +20,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Page;
