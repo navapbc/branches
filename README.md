@@ -3,7 +3,7 @@
 
 
 - [Branches](#branches)
-  - [Sample app](#sample-app)
+  - [Example app](#example-app)
   - [Tests](#tests)
   - [Using a graph in your own project](#using-a-graph-in-your-own-project)
     - [What the graph does](#what-the-graph-does)
