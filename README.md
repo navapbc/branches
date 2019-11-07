@@ -55,25 +55,24 @@ Before you run the tests for the first time, you need to install the project's d
 Unit tests can be run using npm:
 `npm test`
 
-## Using a graph in your own project
+## Usage
 
-To use a flow control graph in your own project, you will first need to import this library and then create a new instance of a Navigator with your own graph data. We will talk about the `sections` and `sectionOrdering` passed to the Navigator later; the other parameters are detailed in the [Navigator source file](src/Navigator.js).
+To use a flow control graph in your own project, you will first need to import this library and then create a new instance of a `Navigator` with your own graph data. We will talk about the `sections` and `sectionOrdering` passed to the `Navigator` later; the other parameters are detailed in the [`Navigator` source file](src/Navigator.js).
 
+```js
+import Navigator from "branches";
+const navigator = new Navigator({ sections, sectionOrdering });
 ```
-import Graph from "./lib/branches/Graph";
 
-const graph = new Graph({ sections, sectionOrdering });
-```
+> 🚨 For now, you'll need to include the `branches` source files in your project manually. I hope to publish the code to npm soon to make it even easier to install.
 
-For now, you will need to include the branches source files in your project manually. I hope to publish the code to npm soon to make it even easier to install.
+### What `Navigator` does
 
-### What the graph does
+The `Navigator` object provides methods for navigating sequentially through the user flow. It looks at the control properties of each graph node to determine a path through the user flow. In your application, you will mostly use the `initialPosition` and `nextPosition` functions to navigate the graph.
 
-The `Graph` object provides methods for navigating sequentially through the user flow. It looks at the control properties of each graph node to determine a path through the user flow. In your application, you will mostly use the `initialPosition` and `nextPosition` functions to navigate the graph.
-
-```
-const firstPosition = graph.initialPosition(applicationData);
-const secondPosition = graph.nextPosition(applicationData, firstPosition);
+```js
+const firstPosition = navigator.initialPosition(applicationData);
+const secondPosition = navigator.nextPosition(applicationData, firstPosition);
 ```
 
 `Position` objects are returned from the Graph's \*Position methods. Each position refers to a specific point in the application and lets you get back information about it.
