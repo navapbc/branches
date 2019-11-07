@@ -2,14 +2,14 @@
   "name": "branches",
   "version": "0.1.0",
   "description": "Graph-based navigation for branching user interfaces",
-  "main": "src/Navigator.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest"
   },
   "jest": {
     "testEnvironment": "node"
   },
-  "repository": "git@bitbucket.org:navahq/branches.git",
+  "repository": "git@github.com:navahq/branches.git",
   "author": "David Wicks",
   "license": "MIT",
   "devDependencies": {
