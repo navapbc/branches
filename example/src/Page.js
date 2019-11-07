@@ -1,21 +1,46 @@
-import React, { Component, Fragment } from "react";
+import React, { Suspense, lazy } from "react";
 
-class Page extends Component {
+// Page content components are defined in the node's `component` property
+// and rendered as <PageContent>. In order for this to work, we need to
+// import all the page components. We do so lazily so that the initial
+// bundle's file size is smaller
+const PageContentComponents = {
+  HouseholdMembers: lazy(() => import("./pages/HouseholdMembers")),
+  HouseholdMemberProfile: lazy(() => import("./pages/HouseholdMemberProfile")),
+  NonResidentRedirect: lazy(() => import("./pages/NonResidentRedirect")),
+  StateResidency: lazy(() => import("./pages/StateResidency")),
+  UserProfile: lazy(() => import("./pages/UserProfile")),
+  Welcome: lazy(() => import("./pages/Welcome"))
+};
+
+class Page extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    const { position, next, reset } = this.props;
-    if (position.isEnd()) {
-      return (
-        <Fragment>
-          <h1 className="ds-h1">End of cycle (or bad path)</h1>
-          <button onClick={reset}>Restart</button>
-        </Fragment>
-      );
-    }
+    const node = this.props.position.activeNode();
+    console.log("node", node);
+
+    const PageContent = node.component ? PageContentComponents[node.component] : null;
+
     return (
-      <Fragment>
-        <h1 className="ds-h1">{`${position.activeNode().name} ${position.sectionKey()}`}</h1>
-        <button onClick={next}>Next</button>
-      </Fragment>
+      <main>
+        {node.content && <h1>{node.content.title}</h1>}
+
+        <Suspense fallback={<p>Loading next page&hellip;</p>}>
+          <PageContent {...this.props} />
+        </Suspense>
+
+        <p>
+          <button onClick={this.props.next}>
+            <strong>Next</strong>
+          </button>
+        </p>
+        <p>
+          <button onClick={this.props.reset}>Restart</button>
+        </p>
+      </main>
     );
   }
 }
