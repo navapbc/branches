@@ -95,8 +95,8 @@ export default class Position {
     let sep = "";
     return this.stack.reduce((url, entry) => {
       url = url + sep + entry.key;
-      if (entry.activeCollectionKey !== undefined) {
-        url += sep + entry.activeCollectionKey;
+      if (entry.activeKey !== undefined && entry.activeKey !== null) {
+        url += sep + entry.activeKey;
       }
       sep = "/";
       return url;
