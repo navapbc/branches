@@ -5,8 +5,8 @@
 - [Branches](#branches)
   - [Example app](#example-app)
   - [Tests](#tests)
-  - [Using a graph in your own project](#using-a-graph-in-your-own-project)
-    - [What the graph does](#what-the-graph-does)
+  - [Usage](#usage)
+    - [What `Navigator` does](#what-navigator-does)
     - [What your app does](#what-your-app-does)
     - [Graph layout](#graph-layout)
       - [Nodes and their control properties](#nodes-and-their-control-properties)
@@ -55,25 +55,24 @@ Before you run the tests for the first time, you need to install the project's d
 Unit tests can be run using npm:
 `npm test`
 
-## Using a graph in your own project
+## Usage
 
-To use a flow control graph in your own project, you will first need to import this library and then create a new instance of a Navigator with your own graph data. We will talk about the `sections` and `sectionOrdering` passed to the Navigator later; the other parameters are detailed in the [Navigator source file](src/Navigator.js).
+To use a flow control graph in your own project, you will first need to import this library and then create a new instance of a `Navigator` with your own graph data. We will talk about the `sections` and `sectionOrdering` passed to the `Navigator` later; the other parameters are detailed in the [`Navigator` source file](src/Navigator.js).
 
+```js
+import Navigator from "branches";
+const navigator = new Navigator({ sections, sectionOrdering });
 ```
-import Graph from "./lib/branches/Graph";
 
-const graph = new Graph({ sections, sectionOrdering });
-```
+> 🚨 For now, you'll need to include the `branches` source files in your project manually. I hope to publish the code to npm soon to make it even easier to install.
 
-For now, you will need to include the branches source files in your project manually. I hope to publish the code to npm soon to make it even easier to install.
+### What `Navigator` does
 
-### What the graph does
+The `Navigator` object provides methods for navigating sequentially through the user flow. It looks at the control properties of each graph node to determine a path through the user flow. In your application, you will mostly use the `initialPosition` and `nextPosition` functions to navigate the graph.
 
-The `Graph` object provides methods for navigating sequentially through the user flow. It looks at the control properties of each graph node to determine a path through the user flow. In your application, you will mostly use the `initialPosition` and `nextPosition` functions to navigate the graph.
-
-```
-const firstPosition = graph.initialPosition(applicationData);
-const secondPosition = graph.nextPosition(applicationData, firstPosition);
+```js
+const initialPosition = navigator.initialPosition(applicationData);
+const nextPosition = navigator.nextPosition(applicationData, initialPosition);
 ```
 
 `Position` objects are returned from the Graph's \*Position methods. Each position refers to a specific point in the application and lets you get back information about it.
@@ -84,16 +83,16 @@ The `GraphAnalyzer` provides methods for testing the shape of your graph to ensu
 
 On each graph node, you can store your own data. Use that data to decide what to show your user. You can think of each node as a page of your application, and the properties you add to that node as props you pass into the render function for that page.
 
-```
+```js
 function renderPage(props) {
   const { title } = props;
-  return <h1>${title}</h1>;
+  return `<h1>${title}</h1>`;
 }
 ```
 
-```
-const currentNode = secondPosition.activeNode();
-renderPage(currentNode.userData);
+```js
+const node = nextPosition.activeNode();
+renderPage(node.userData);
 ```
 
 ### Graph layout
@@ -106,7 +105,7 @@ Each piece of the graph is a node. All information used by the flow control grap
 
 A simple node looks like the following:
 
-```
+```js
 {
   _control: {
     next: "anotherNode"
@@ -127,7 +126,7 @@ For a complete example of the possible control properties and how they fit in a 
 
 Each section is the root node of a graph structure. It specifies the `initialNode` to provide an entry point into its child nodes.
 
-```
+```js
 const first = {
   _control: { initialNode: "a" },
   a: { _control: { next: "b" } },
@@ -142,7 +141,7 @@ const sections = { first, second, third };
 
 The section ordering array tells the `Graph` the order in which to visit each section. The sections are identified by their key, and visited sequentially as the path through each is completed.
 
-```
+```js
 const sectionOrdering = ["first", "second", "third"];
 ```
 
@@ -152,7 +151,7 @@ const sectionOrdering = ["first", "second", "third"];
 
 The `condition` control property lets you determine whether a given node should be visited. If the named condition function returns false, the node will be skipped,and progress will continue with the next node.
 
-```
+```js
 _control: {
   condition: "isRaining",
   next: "following"
@@ -161,7 +160,7 @@ _control: {
 
 Condition functions are provided to the graph as a map called filters. When evaluated as part of a control property, the condition functions receive the _incoming_ position as a parameter.
 
-```
+```js
 const filters = {
   isRaining: (data, position) => false,
   isCloudy: (data, position) => true,
@@ -177,7 +176,7 @@ Stored in the `filters` property of the Graph.
 
 The `next` control property can take a few forms. The simplest is the string key of the following sibling node. To enable a choice between following nodes, you can also provide an array of `{ key, condition }` pairs.
 
-```
+```js
 next: [
   { key: "indoorActivities", condition: "isRaining" },
   { key: "walk", condition: "isCloudy" },
